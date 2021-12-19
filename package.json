@@ -4,7 +4,7 @@
   "description": "test project",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=test mocha api/user/user.spec.js",
+    "test": "NODE_ENV=test mocha api/user/user.spec.js -w",
     "start": "node bin/www.js"
   },
   "author": "cheoljin",
@@ -13,7 +13,9 @@
     "body-parser": "^1.19.1",
     "express": "^4.17.2",
     "morgan": "^1.10.0",
-    "should": "^13.2.3"
+    "sequelize": "^6.12.0",
+    "should": "^13.2.3",
+    "sqlite3": "^5.0.2"
   },
   "devDependencies": {
     "mocha": "^9.1.3",

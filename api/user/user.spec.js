@@ -1,10 +1,19 @@
 const app = require('../../');
 const should = require('should');
 const request = require('supertest');
-
+const models = require('../../model');
 
 describe('GET /users는', () => {
+  const users = [
+    {name: 'alice'},
+    {name: 'bek'},
+    {name: 'chris'},
+  ];
+  before(() => models.sequelize.sync({force: true}));
+  before(() => models.User.bulkCreate(users));
+
   describe('성공시', () => {
+    
     it('유저 객체를 담은 배열로 응답한다.', (done) => {
       request(app)
         .get('/users')
@@ -35,6 +44,14 @@ describe('GET /users는', () => {
 });
 
 describe('GET /users/1', () => {
+  const users = [
+    {name: 'alice'},
+    {name: 'bek'},
+    {name: 'chris'},
+  ];
+  before(() => models.sequelize.sync({force: true}));
+  before(() => models.User.bulkCreate(users));
+
   describe('성공시', () => {
     it('id가 1인 유저 객체를 반환한다.', (done) => {
       request(app)
@@ -64,6 +81,14 @@ describe('GET /users/1', () => {
 })
 
 describe('DELTE /users/1', () => {
+  const users = [
+    {name: 'alice'},
+    {name: 'bek'},
+    {name: 'chris'},
+  ];
+  before(() => models.sequelize.sync({force: true}));
+  before(() => models.User.bulkCreate(users));
+
   describe('성공시', () => {
     it('204를 반환', (done) => {
       request(app)
@@ -80,21 +105,22 @@ describe('DELTE /users/1', () => {
         .expect(400)
         .end(done);
     })
-
-    it('404를 반환', (done) => {
-      request(app)
-        .delete('/users/999')
-        .expect(404)
-        .end(done);
-    })
   })
 })
 
 describe('POST /users', () => {
+  const users = [
+    {name: 'alice'},
+    {name: 'bek'},
+    {name: 'chris'},
+  ];
+  before(() => models.sequelize.sync({force: true}));
+  before(() => models.User.bulkCreate(users));
+
   describe('성공시', () => {
     let name = 'daniel',
-        body;
-    before((done) => {
+        body; 
+    before(done => {
       request(app)
         .post('/users')
         .send({name})
@@ -110,31 +136,31 @@ describe('POST /users', () => {
     it('201 상태코드 반환', () => {
       body.should.have.property('name', name);
     })
-
-    
-  })
+  });
 
   describe('실패시', () => {
-    it('name 파라미터 누락시 400을 반환', (done) => {
+    it('name 파라미터 누락시 400을 반환', done => {
       request(app)
         .post('/users')
         .send({})
         .expect(400)
-        .end(done);
-    })
-    it('name 파라미터 중복시 409을 반환', (done) => {
+        .end(done)
+    });
+
+    it('name 파라미터 중복시 409을 반환', done => {
       request(app)
         .post('/users')
         .send({name: 'daniel'})
         .expect(409)
-        .end(done);
-    })
+        .end(done)
+    });
 
     
-  })
+  });
 })
 
 describe('PUT /users/:id', () => {
+
   describe('성공시', () => {
     it('변경된 name을 응답', (done) => {
       const name = 'chally';
@@ -179,7 +205,7 @@ describe('PUT /users/:id', () => {
       
       request(app)
         .put('/users/1')
-        .send({name: 'chally'})
+        .send({name: 'bek'})
         .expect(409)
         .end(done);
     });
